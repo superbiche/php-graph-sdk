@@ -12,12 +12,13 @@
         }
     ],
     "require": {
-        "php": "^5.4|^7.0"
+        "php": "^5.4|^7.0|8.0.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "~4.0",
+        "phpunit/phpunit": "^8.0",
         "mockery/mockery": "~0.8",
-        "guzzlehttp/guzzle": "~5.0"
+        "guzzlehttp/guzzle": "~5.0",
+        "phpcompatibility/php-compatibility": "*"
     },
     "suggest": {
         "paragonie/random_compat": "Provides a better CSPRNG option in PHP 5",
@@ -38,5 +39,12 @@
         "branch-alias": {
             "dev-master": "5.x-dev"
         }
+    },
+    "scripts": {
+        "post-install-cmd": "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility",
+        "post-update-cmd" : "\"vendor/bin/phpcs\" --config-set installed_paths vendor/phpcompatibility/php-compatibility",
+        "check-deps-compat:php80": "composer why-not php 8.0",
+        "check-code-compat:php80": "php -dmemory_limit=-1 ./vendor/bin/phpcs --parallel=8 -p --standard=PHPCompatibility --extensions=php,inc --runtime-set testVersion 8.0 ./src ./tests",
+        "check-deps-code-compat:php81": "php -dmemory_limit=-1 ./vendor/bin/phpcs --parallel=8 -p --report=summary --standard=PHPCompatibility --extensions=php,inc --runtime-set testVersion 8.0 ./vendor"
     }
 }
